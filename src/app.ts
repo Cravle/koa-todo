@@ -1,24 +1,42 @@
 import * as Koa from 'koa'
-import { DefaultState, DefaultContext, ParameterizedContext } from 'koa'
-import * as Router from 'koa-router'
+import { DefaultState, DefaultContext } from 'koa'
+import * as mongoose from 'mongoose'
+const BodyParser = require('koa-bodyparser')
 import 'colors'
+import { config } from './config'
 
-const port = 8000
+import taskRoute from './routes/tasks.routes'
+
+const PORT = config.port
 
 const app: Koa<DefaultState, DefaultContext> = new Koa()
+app.use(BodyParser())
 
-const router: Router = new Router()
+const db = mongoose.connection
+const host = config.mongoUri
+const options = { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true }
 
-router.get('/', async (ctx: ParameterizedContext<DefaultState, DefaultContext>) => {
-	ctx.body = { msg: 'hello world' }
-})
+void (async () => {
+	try {
+		await mongoose.connect(host, options)
+	} catch (e) {
+		console.log(e)
+	}
+})()
+db.on('error', err => console.log('Error, DB not connected'.red.bold, err))
+db.on('connected', () => console.log('DB connected to mog'.green.bold))
+db.on('disconnected', () => console.log('Mongo is disconnected'))
+db.on('open', () => console.log('Connection Made!'))
 
-app.use(router.routes()).use(router.allowedMethods())
+app.use(taskRoute.routes())
+app.use(taskRoute.allowedMethods())
 
 app
-	.listen(port)
+	.listen(PORT, async () => {
+		console.log(`Server listening on port: ${PORT}`)
+	})
 	.on('listening', () =>
 		console.log(
-			`server started on port=${port} got to http://localhost:${port}`.blue.bold
+			`server started on port=${PORT} got to http://localhost:${PORT}`.blue.bold
 		)
 	)
