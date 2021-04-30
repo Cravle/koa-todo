@@ -5,7 +5,7 @@ const bodyParser = require('koa-body')
 import 'colors'
 import { config } from './config'
 
-import taskRoute from './routes/tasks.routes'
+import routers from './routes/'
 
 const PORT = config.port
 
@@ -39,8 +39,8 @@ db.on('connected', () => console.log('DB connected to mog'.green.bold))
 db.on('disconnected', () => console.log('Mongo is disconnected'))
 db.on('open', () => console.log('Connection Made!'))
 
-app.use(taskRoute.routes())
-app.use(taskRoute.allowedMethods())
+app.use(routers.routes())
+app.use(routers.allowedMethods())
 
 app
 	.listen(PORT, async () => {

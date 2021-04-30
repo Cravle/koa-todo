@@ -1,8 +1,6 @@
-import * as Router from 'koa-router'
 import Tasks from '../models/tasks'
-const router = new Router()
 
-router.get('/tasks', async ctx => {
+export const getTasks = async ctx => {
 	try {
 		const tasks = await Tasks.find()
 		ctx.body = {
@@ -14,9 +12,9 @@ router.get('/tasks', async ctx => {
 	} catch (e) {
 		return (ctx.status = 400), ctx.body({ message: e.message })
 	}
-})
+}
 
-router.post('/task/add', async ctx => {
+export const addTask = async ctx => {
 	try {
 		await Tasks.insertMany([
 			{ text: ctx.request.body.text, status: ctx.request.body.status },
@@ -25,28 +23,27 @@ router.post('/task/add', async ctx => {
 	} catch (e) {
 		return (ctx.status = 400), ctx.body({ message: e.message })
 	}
-})
+}
 
-router.delete('/task/:id', async ctx => {
+export const deleteTask = async ctx => {
 	try {
 		const id = ctx.params.id
 
-		await Tasks.findOneAndDelete(
-			{ _id: id },
-			//@ts-ignore
-			(err: Error) => {
-				if (err) {
-					throw err
-				}
-				return (ctx.status = 200), (ctx.body = { message: 'task was removed' })
-			}
-		)
+		const task = await Tasks.findById(id)
+		if (!task) {
+			throw new Error('task not found')
+		}
+
+		await task.deleteOne()
+		ctx.status = 200
+		ctx.body = { message: 'task was removed' }
+		return ctx
 	} catch (e) {
 		return (ctx.status = 404), (ctx.body = { message: 'task not found' })
 	}
-})
+}
 
-router.put('/task/update', async ctx => {
+export const changeTask = async ctx => {
 	try {
 		const { id, text, status } = ctx.request.body
 		const task = await Tasks.findById(id)
@@ -61,13 +58,11 @@ router.put('/task/update', async ctx => {
 
 		ctx.status = 200
 		ctx.body = {
-			message: 'task was update',
+			task: task,
 		}
 
 		return ctx
 	} catch (e) {
 		return (ctx.status = 400), (ctx.body = { message: 'task not found' })
 	}
-})
-
-export default router
+}
