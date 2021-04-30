@@ -1,7 +1,7 @@
 import * as Koa from 'koa'
 import { DefaultState, DefaultContext } from 'koa'
 import * as mongoose from 'mongoose'
-const BodyParser = require('koa-bodyparser')
+const bodyParser = require('koa-body')
 import 'colors'
 import { config } from './config'
 
@@ -10,11 +10,22 @@ import taskRoute from './routes/tasks.routes'
 const PORT = config.port
 
 const app: Koa<DefaultState, DefaultContext> = new Koa()
-app.use(BodyParser())
+app.use(
+	bodyParser({
+		formidable: { uploadDir: './uploads' },
+		multipart: true,
+		urlencoded: true,
+	})
+)
 
 const db = mongoose.connection
 const host = config.mongoUri
-const options = { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true }
+const options = {
+	useNewUrlParser: true,
+	useUnifiedTopology: true,
+	useCreateIndex: true,
+	useFindAndModify: false,
+}
 
 void (async () => {
 	try {
