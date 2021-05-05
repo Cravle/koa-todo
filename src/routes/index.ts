@@ -1,13 +1,9 @@
 import * as Router from 'koa-router'
-import { addTask, changeTask, deleteTask, getTasks } from './tasks.routes'
-const router = new Router()
 
-router.get('/tasks', getTasks)
+import tasks from './tasks.routes'
 
-router.post('/task/add', addTask)
+export const router = new Router()
 
-router.delete('/task/:id', deleteTask)
-
-router.put('/task/update', changeTask)
+router.use(tasks)
 
 export default router
