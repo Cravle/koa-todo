@@ -4,6 +4,7 @@ dotenv.config({ path: __dirname + '/.env' })
 import * as Koa from 'koa'
 import { DefaultState, DefaultContext } from 'koa'
 import * as bodyParser from 'koa-body'
+import * as cors from 'koa-cors'
 
 import mongooseConfig from './lib/mongoose-config'
 import config from './lib/config'
@@ -12,6 +13,8 @@ import router from './routes'
 const port = config.port
 
 const app: Koa<DefaultState, DefaultContext> = new Koa()
+
+app.use(cors())
 
 app.use(
 	bodyParser({
