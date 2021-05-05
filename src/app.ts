@@ -1,42 +1,30 @@
+import * as dotenv from 'dotenv'
+dotenv.config({ path: __dirname + '/.env' })
+
 import * as Koa from 'koa'
 import { DefaultState, DefaultContext } from 'koa'
-import * as mongoose from 'mongoose'
-const BodyParser = require('koa-bodyparser')
-import 'colors'
-import { config } from './config'
+import * as bodyParser from 'koa-body'
 
-import taskRoute from './routes/tasks.routes'
+import mongooseConfig from './lib/mongoose-config'
+import config from './lib/config'
+import router from './routes'
 
-const PORT = config.port
+const port = config.port
 
 const app: Koa<DefaultState, DefaultContext> = new Koa()
-app.use(BodyParser())
 
-const db = mongoose.connection
-const host = config.mongoUri
-const options = { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true }
-
-void (async () => {
-	try {
-		await mongoose.connect(host, options)
-	} catch (e) {
-		console.log(e)
-	}
-})()
-db.on('error', err => console.log('Error, DB not connected'.red.bold, err))
-db.on('connected', () => console.log('DB connected to mog'.green.bold))
-db.on('disconnected', () => console.log('Mongo is disconnected'))
-db.on('open', () => console.log('Connection Made!'))
-
-app.use(taskRoute.routes())
-app.use(taskRoute.allowedMethods())
-
-app
-	.listen(PORT, async () => {
-		console.log(`Server listening on port: ${PORT}`)
+app.use(
+	bodyParser({
+		formidable: { uploadDir: './uploads' },
+		multipart: true,
+		urlencoded: true,
 	})
-	.on('listening', () =>
-		console.log(
-			`server started on port=${PORT} got to http://localhost:${PORT}`.blue.bold
-		)
-	)
+)
+app.use(router.allowedMethods())
+app.use(router.routes())
+
+mongooseConfig()
+
+app.listen(port, async () => {
+	console.log(`Server listening on port: ${port}`)
+})

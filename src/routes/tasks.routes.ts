@@ -1,16 +1,17 @@
 import * as Router from 'koa-router'
-import Tasks from '../models/tasks'
+
+import { addTask, changeTask, deleteAllCompleted, deleteTask, getTasks } from './tasks'
+
 const router = new Router()
 
-router.get('/tasks', ctx => {
-	Tasks.find().then(tasks => {
-		console.log(tasks)
+router.get('/tasks', getTasks)
 
-		ctx.body = {
-			tasks: tasks,
-		}
-		ctx.status = 200
-	})
-})
+router.post('/create-task', addTask)
 
-export default router
+router.delete('/task/:id', deleteTask)
+
+router.delete('/tasks/:ids', deleteAllCompleted)
+
+router.put('/task/update', changeTask)
+
+export default router.routes()
