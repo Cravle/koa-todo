@@ -6,6 +6,10 @@ const tasksSchema = new Schema({
 	status: { type: String, required: true },
 })
 
+tasksSchema.set('toJSON', {
+	virtuals: true,
+})
+
 const Tasks = mongoose.model('tasks', tasksSchema)
 
 export default Tasks

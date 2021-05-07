@@ -1,6 +1,13 @@
 import * as Router from 'koa-router'
 
-import { addTask, changeTask, deleteAllCompleted, deleteTask, getTasks } from './tasks'
+import {
+	addTask,
+	changeTask,
+	changeTasksStatus,
+	deleteAllCompleted,
+	deleteTask,
+	getTasks,
+} from './tasks'
 
 const router = new Router()
 
@@ -13,5 +20,7 @@ router.delete('/task/:id', deleteTask)
 router.delete('/tasks/:ids', deleteAllCompleted)
 
 router.put('/task/update', changeTask)
+
+router.put('/task/change-status', changeTasksStatus)
 
 export default router.routes()
