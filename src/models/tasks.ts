@@ -4,6 +4,11 @@ const Schema = mongoose.Schema
 const tasksSchema = new Schema({
 	text: { type: String, required: true },
 	status: { type: String, required: true },
+	user: {
+		type: Schema.Types.ObjectId,
+		ref: 'users',
+		required: true,
+	},
 })
 
 tasksSchema.set('toJSON', {
