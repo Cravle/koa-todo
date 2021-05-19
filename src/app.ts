@@ -15,6 +15,7 @@ const port = config.port
 const app: Koa<DefaultState, DefaultContext> = new Koa()
 
 app.use(cors())
+// app.use(jwtMiddleware({ secret: process.env.SECRET }))
 
 app.use(
 	bodyParser({

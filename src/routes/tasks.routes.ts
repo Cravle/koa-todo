@@ -1,4 +1,5 @@
 import * as Router from 'koa-router'
+import { userAuth } from '../middleware'
 
 import {
 	addTask,
@@ -7,20 +8,20 @@ import {
 	deleteAllCompleted,
 	deleteTask,
 	getTasks,
-} from './tasks'
+} from '../middleware/tasks'
 
 const router = new Router()
 
-router.get('/tasks', getTasks)
+router.get('/tasks', userAuth, getTasks)
 
-router.post('/create-task', addTask)
+router.post('/create-task', userAuth, addTask)
 
-router.delete('/task/:id', deleteTask)
+router.delete('/task/:id', userAuth, deleteTask)
 
-router.delete('/tasks/:ids', deleteAllCompleted)
+router.delete('/tasks/:ids', userAuth, deleteAllCompleted)
 
-router.put('/task/update', changeTask)
+router.put('/task/update', userAuth, changeTask)
 
-router.put('/task/change-status', changeTasksStatus)
+router.put('/task/change-status', userAuth, changeTasksStatus)
 
 export default router.routes()
