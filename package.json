@@ -11,8 +11,10 @@
 	"dependencies": {
 		"@types/mongodb": "^3.6.12",
 		"@types/mongoose": "^5.10.5",
+		"@types/socket.io": "^3.0.2",
 		"bcryptjs": "^2.4.3",
 		"dotenv": "^8.5.1",
+		"http": "0.0.1-security",
 		"husky": "^6.0.0",
 		"jest": "^26.6.3",
 		"jsonwebtoken": "^8.5.1",
