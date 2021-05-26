@@ -6,8 +6,8 @@ const getTasks = async ctx => {
 		? await Tasks.find({ status, user: ctx.request.user.userId })
 		: await Tasks.find({ user: ctx.request.user.userId })
 	const count = {
-		active: await Tasks.count({ status: 'active' }),
-		completed: await Tasks.count({ status: 'completed' }),
+		active: await Tasks.count({ status: 'active', user: ctx.request.user.userId }),
+		completed: await Tasks.count({ status: 'completed', user: ctx.request.user.userId }),
 	}
 
 	ctx.body = {

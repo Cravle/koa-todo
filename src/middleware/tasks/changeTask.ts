@@ -10,10 +10,14 @@ const changeTask = async ctx => {
 		}
 	}
 
-	await task.updateOne({
-		text: text,
-		status: status,
-	})
+	await Tasks.findOneAndUpdate(
+		{ _id: id },
+		{
+			text: text,
+			status: status,
+		},
+		{ new: true }
+	)
 
 	ctx.status = 200
 	ctx.body = {

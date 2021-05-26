@@ -42,6 +42,8 @@ const login = async ctx => {
 		{ expiresIn: config.tokenTime }
 	)
 
+	const roomId = candidate._id
+
 	ctx.status = 200
 	ctx.body = {
 		token: `Bearer ${token}`,
